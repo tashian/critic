@@ -1,0 +1,18 @@
+#!/bin/bash
+# Wrapper so hooks, the status line, and the /critic skill all run Critic the same way.
+# For commands that call the API directly (report, analyze), the key comes from tsm when configured.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BUN="${BUN:-$(command -v bun || echo "$HOME/.bun/bin/bun")}"
+TSM="$(command -v tsm || echo "$HOME/.bun/bin/tsm")"
+CONFIG="${CRITIC_DIR:-$HOME/.claude/critic}/config.json"
+
+case "$1" in
+  report|analyze)
+    SECRET=""
+    [ -f "$CONFIG" ] && SECRET=$(jq -r '.tsmSecret // empty' "$CONFIG" 2>/dev/null)
+    if [ -n "$SECRET" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
+      exec "$TSM" run --env "ANTHROPIC_API_KEY=$SECRET" -- "$BUN" "$DIR/src/cli.ts" "$@"
+    fi
+    ;;
+esac
+exec "$BUN" "$DIR/src/cli.ts" "$@"
