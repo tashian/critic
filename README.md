@@ -2,6 +2,8 @@
 
 Critic is a session coach for Claude Code. It compares your live session with all of your past sessions. It tells you when to take a break, celebrates your peak stretches, and gives you one prompting habit to work on.
 
+https://github.com/user-attachments/assets/3b81098a-2ecd-4b88-98a2-2ababf916fdf
+
 ## What you see
 
 - **Status line.** One line under your prompt with the current verdict: 🔥 Peak, 🌊 Flowing, 🧭 Steady, 🪨 Grinding, or ☕ Take a break.
