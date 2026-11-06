@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { existsSync, readFileSync, mkdirSync } from "node:fs";
 
 export const HOME = homedir();
-export const PROJECTS_DIR = join(HOME, ".claude", "projects");
+/** Override with CRITIC_PROJECTS_DIR to compare against a different history, for example a synthetic one in a demo. */
+export const PROJECTS_DIR = process.env.CRITIC_PROJECTS_DIR ?? join(HOME, ".claude", "projects");
 export const CRITIC_DIR = process.env.CRITIC_DIR ?? join(HOME, ".claude", "critic");
 export const SESSIONS_DIR = join(CRITIC_DIR, "sessions");
 export const BASELINE_CACHE = join(CRITIC_DIR, "baseline-cache.json");

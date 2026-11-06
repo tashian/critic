@@ -1,0 +1,404 @@
+{
+ "history": [
+  -0.68,
+  -0.21,
+  -0.2,
+  0.24,
+  0.45,
+  0.53,
+  0.64,
+  0.69,
+  0.78,
+  0.82,
+  1,
+  1.1,
+  1.11,
+  1.12,
+  1.25,
+  1.29,
+  1.36,
+  1.38,
+  1.47,
+  1.5,
+  1.65,
+  1.65,
+  1.75,
+  1.83,
+  1.83,
+  1.89,
+  2.2,
+  2.54
+ ],
+ "sessions": {
+  "flowing": {
+   "title": "CSV export for invoices",
+   "project": "billing-dashboard",
+   "prompts": 8,
+   "activeMin": 35,
+   "stats": {
+    "prompts": 8,
+    "slashCommands": 0,
+    "avgPromptChars": 84,
+    "corrections": 1,
+    "praise": 1,
+    "repeats": 0,
+    "interrupts": 0,
+    "rejections": 0,
+    "toolCalls": 16,
+    "toolErrors": 0,
+    "edits": 7,
+    "commits": 2,
+    "testRuns": 3,
+    "friction": 0.25,
+    "momentum": 1.56
+   },
+   "flow": 1.31,
+   "flowPct": 57,
+   "frictionPct": 20,
+   "activePct": 0,
+   "exchanges": [
+    {
+     "index": 2,
+     "prompt": "no, keep the amounts in cents in the CSV — finance imports it into NetSuite and it expects integers.",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      },
+      {
+       "label": "tests",
+       "tone": "info"
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "prompt": "Great. Commit.",
+     "tags": [
+      {
+       "label": "praise",
+       "tone": "good"
+      },
+      {
+       "label": "commit",
+       "tone": "good"
+      }
+     ]
+    }
+   ],
+   "verdict": {
+    "mood": "flowing",
+    "status": "2 commits, 0 tool errors in 35m",
+    "message": "This is a clean session. In 35 minutes you have 2 commits, 3 test runs and no tool errors. Friction sits at the 20th percentile of your history. The one correction (#2, amounts in cents) cost a single turn, and you put a concrete test case right into #5.",
+    "habit": {
+     "name": "State data-format constraints up front",
+     "observed": "In #2 you had to correct the assistant because #1 never said the CSV feeds NetSuite and needs integer cents.",
+     "try_next": "When you ask for an export or integration, name who uses the output and its format rules in the first prompt, for example 'amounts as integer cents, for a NetSuite import'."
+    }
+   },
+   "report": null
+  },
+  "take_a_break": {
+   "title": "OAuth refresh token 401s",
+   "project": "acme-api",
+   "prompts": 16,
+   "activeMin": 165,
+   "stats": {
+    "prompts": 16,
+    "slashCommands": 0,
+    "avgPromptChars": 47,
+    "corrections": 10,
+    "praise": 0,
+    "repeats": 1,
+    "interrupts": 2,
+    "rejections": 2,
+    "toolCalls": 24,
+    "toolErrors": 7,
+    "edits": 11,
+    "commits": 0,
+    "testRuns": 5,
+    "friction": 1.89,
+    "momentum": 0.5
+   },
+   "flow": -1.39,
+   "flowPct": 0,
+   "frictionPct": 100,
+   "activePct": 100,
+   "exchanges": [
+    {
+     "index": 2,
+     "prompt": "still getting 401 on refresh",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      },
+      {
+       "label": "tool error",
+       "tone": "warn"
+      },
+      {
+       "label": "tests",
+       "tone": "info"
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "prompt": "same error. the refresh endpoint still returns a 401 after the access token expires",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      },
+      {
+       "label": "repeated prompt",
+       "tone": "bad"
+      }
+     ]
+    },
+    {
+     "index": 14,
+     "prompt": "still failing",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      },
+      {
+       "label": "interrupted",
+       "tone": "bad"
+      }
+     ]
+    },
+    {
+     "index": 15,
+     "prompt": "ugh. same 401 invalid_grant on refresh after expiry. try again",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      },
+      {
+       "label": "tool error",
+       "tone": "warn"
+      },
+      {
+       "label": "tests",
+       "tone": "info"
+      }
+     ]
+    }
+   ],
+   "verdict": {
+    "mood": "take_a_break",
+    "status": "Same 401 invalid_grant, 3 failed fixes in 165m",
+    "message": "You've been at this for 165 active minutes with zero commits. Prompts #13–#15 asked for the same refresh-token fix and got the same 401 each time. This session ranks at the 100th percentile for friction and the 0th for momentum compared with your 28 past sessions. Take a break. When you come back, /clear and start over with the failing test output and one hypothesis to check.",
+    "habit": {
+     "name": "After two failures, re-plan instead of retrying",
+     "observed": "#14 'still failing' and #15 'try again' both asked for the same fix to src/auth/refresh.ts, and the same test failed again: expected 200, received 401.",
+     "try_next": "After /clear, paste the full output of bun test src/auth plus the refresh_tokens row for the test user. Ask for a diagnosis only, with no edits: why would invalid_grant come back after the access token expires (token rotation, hash comparison, expiry check)? Edit only after you agree with the cause."
+    }
+   },
+   "report": "# Critic report\n**Session goal:** Stop the refresh endpoint returning 401 `invalid_grant` after the access token expires.\n**Verdict:** take_a_break. Friction is at the 100th percentile and flow at the 0th compared with your 28 past sessions. This is also your longest session ever, at 165 active minutes.\n\n## What went well\n- At #9 you changed tactics and asked for logging instead of another fix. That step gave you the real error at #10: `401 {\"error\":\"invalid_grant\"}`.\n- You caught risky actions quickly. You reverted tokens.ts (#4), rejected the migration edit (#7) and blocked `delete from refresh_tokens` (#11).\n\n## Where it dragged\n- The same test, `refresh › rotates token`, failed at #1, #2, #5, #13 and #15. None of the 6 edits to refresh.ts came after a diagnosis.\n- Scope drifted to tokens.ts (#3), session.ts (#6) and a migration (#7). Each one cost a correction prompt to undo.\n- The invalid_grant clue from #10 was never followed up. #13 went back to \"fix it\" without the server log or the token's database row.\n- No commits in 16 prompts. Your median is 0.22 commits per prompt.\n\n## Prompting habits\n- **#0 under-specified the task.** \"Fix the refresh token flow\" left the assistant guessing. Name the done condition (`bun test src/auth` green) and the one file in scope.\n- **#2, #6, #14, #15 restated the symptom.** \"still failing\" and \"same error\" give the assistant nothing new. Paste the new output, or ask \"what are the 3 possible causes of invalid_grant here?\"\n- **#3, #6, #7 had no scope fence.** Say \"only edit src/auth/refresh.ts\" up front instead of correcting after each stray edit.\n- **#11: you had evidence but no question.** \"the token is right there\" is a reaction. Paste the stored token row and the request body, and ask why they don't match.\n\n## From your best sessions\n- All three of your top sessions opened like this: \"Goal: X. Done = Y. Read <file> first and tell me the plan before editing.\" Your audit-log session on this same repo, acme-api, had 6 commits and only 2 corrections across 134 minutes.\n- In that session, a \"still failing, same error\" prompt was followed by \"Commit that.\" The difference was a plan agreed first, so retries stayed inside it.\n- This session had no goal statement, no plan, no done line and no commits.\n\n## Next 3 moves\n1. Step away for at least 15 minutes. You've hit 9 PM after 165 active minutes, and your baseline has almost no stretches this long.\n2. Come back, run /clear, and send: \"Goal: refresh returns 200 after expiry. Done = `bun test src/auth` green. Only touch src/auth/refresh.ts. Here's the curl response and server log: <paste>. Explain why invalid_grant fires, then give me the plan before editing.\"\n3. Once it's green, commit. Then add a note to AGENTS.md about how refresh tokens are stored and validated, so the next session starts with that knowledge.\n"
+  },
+  "grinding": {
+   "title": "Flaky checkout e2e test",
+   "project": "acme-api",
+   "prompts": 10,
+   "activeMin": 58,
+   "stats": {
+    "prompts": 10,
+    "slashCommands": 0,
+    "avgPromptChars": 60,
+    "corrections": 2,
+    "praise": 0,
+    "repeats": 0,
+    "interrupts": 0,
+    "rejections": 0,
+    "toolCalls": 21,
+    "toolErrors": 4,
+    "edits": 4,
+    "commits": 2,
+    "testRuns": 0,
+    "friction": 0.5,
+    "momentum": 0.8
+   },
+   "flow": 0.3,
+   "flowPct": 14,
+   "frictionPct": 48,
+   "activePct": 14,
+   "exchanges": [
+    {
+     "index": 7,
+     "prompt": "you didn't wait for the confirmation. That's a different failure than before.",
+     "tags": [
+      {
+       "label": "correction",
+       "tone": "bad"
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "prompt": "CI red again, now it's the saved-card test timing out on the Pay button again. why is this still happening",
+     "tags": [
+      {
+       "label": "tool error",
+       "tone": "warn"
+      }
+     ]
+    }
+   ],
+   "verdict": {
+    "mood": "grinding",
+    "status": "3rd CI red on checkout test after 2 pushes",
+    "message": "Your best move was at #3, when you told Claude to stop bumping timeouts and find the root cause. That found the cold stub server. Since then you've been in a push-and-wait loop. Both fixes passed 20/20 locally and still failed in CI. The Pay button timeout is back at #9, so the globalSetup warm-up either isn't running in CI or isn't the whole cause. Momentum is in your bottom 8% of sessions, so stop guessing and make CI's failure reproducible locally before the next push.",
+    "habit": {
+     "name": "Re-plan after two failed attempts",
+     "observed": "Two commits (#5, #8) both passed locally, and CI failed after each one (#6, #9). Each push was another guess.",
+     "try_next": "Before you edit again, ask: \"Paste the full failed CI log. Does global-setup run in CI and hit the same stub URL? List what's different between CI and local, then run locally with CI=1 and workers matching CI until it fails.\""
+    }
+   },
+   "report": null
+  },
+  "peak": {
+   "title": "Per-key rate limiting for /v1",
+   "project": "acme-api",
+   "prompts": 10,
+   "activeMin": 53,
+   "stats": {
+    "prompts": 10,
+    "slashCommands": 0,
+    "avgPromptChars": 116,
+    "corrections": 0,
+    "praise": 2,
+    "repeats": 0,
+    "interrupts": 0,
+    "rejections": 0,
+    "toolCalls": 27,
+    "toolErrors": 0,
+    "edits": 11,
+    "commits": 4,
+    "testRuns": 6,
+    "friction": 0,
+    "momentum": 2.35
+   },
+   "flow": 2.35,
+   "flowPct": 96,
+   "frictionPct": 0,
+   "activePct": 14,
+   "exchanges": [
+    {
+     "index": 0,
+     "prompt": "Goal: per-API-key rate limiting on the public /v1 API. Done = `bun test src/ratelimit` passes and /v1/* returns 429 with a Retry-After header when a key is over its limit. Read src/middleware/ and src/routes/v1.ts, then propose a plan before you edit anything.",
+     "tags": []
+    },
+    {
+     "index": 3,
+     "prompt": "Green. Commit it.",
+     "tags": [
+      {
+       "label": "commit",
+       "tone": "good"
+      }
+     ]
+    },
+    {
+     "index": 5,
+     "prompt": "Nice. Add Retry-After and X-RateLimit-Remaining headers, one test each, then commit.",
+     "tags": [
+      {
+       "label": "praise",
+       "tone": "good"
+      },
+      {
+       "label": "tests",
+       "tone": "info"
+      },
+      {
+       "label": "commit",
+       "tone": "good"
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "prompt": "Perfect — ship it. Push and open the PR with a short design summary and the load test numbers.",
+     "tags": [
+      {
+       "label": "praise",
+       "tone": "good"
+      }
+     ]
+    }
+   ],
+   "verdict": {
+    "mood": "peak",
+    "status": "4 commits, PR #482, zero friction in 53m",
+    "message": "You shipped a full feature in 53 minutes: 4 commits, 6 test runs, PR #482 opened, and zero corrections or tool errors. Your flow is in the 96th percentile and recent momentum is in the 98th, so this is one of your best sessions. The reason is your first prompt: it gave a goal, a runnable definition of done, and asked for a plan before any edits.",
+    "habit": {
+     "name": "Open with goal + done-check + plan-first",
+     "observed": "Prompt #0 named the goal, set done as `bun test src/ratelimit` plus a 429 with Retry-After, and asked for a plan before edits. After that, no prompt needed a correction.",
+     "try_next": "Save the prompt #0 template (Goal / Done = command / read X, propose plan) in AGENTS.md so your next session opens the same way."
+    }
+   },
+   "report": null
+  },
+  "steady": {
+   "title": "How webhook retries work",
+   "project": "acme-api",
+   "prompts": 7,
+   "activeMin": 34,
+   "stats": {
+    "prompts": 7,
+    "slashCommands": 0,
+    "avgPromptChars": 68,
+    "corrections": 0,
+    "praise": 1,
+    "repeats": 0,
+    "interrupts": 0,
+    "rejections": 0,
+    "toolCalls": 13,
+    "toolErrors": 0,
+    "edits": 2,
+    "commits": 0,
+    "testRuns": 0,
+    "friction": 0,
+    "momentum": 0.36
+   },
+   "flow": 0.36,
+   "flowPct": 14,
+   "frictionPct": 0,
+   "activePct": 0,
+   "exchanges": [
+    {
+     "index": 1,
+     "prompt": "What's the backoff schedule exactly? And is there a max attempts?",
+     "tags": [
+      {
+       "label": "praise",
+       "tone": "good"
+      }
+     ]
+    },
+    {
+     "index": 4,
+     "prompt": "OK. Do we sign the payloads? A customer asked how to verify them.",
+     "tags": []
+    }
+   ],
+   "verdict": {
+    "mood": "steady",
+    "status": "7 clean questions, docs draft in, 0 errors",
+    "message": "This is a smooth exploration session. You've had 0 tool errors, 0 rejections and 0 repeats in 34 minutes. Momentum shows at the 2nd percentile only because you've mostly been reading code, not committing, and there's no sign you're stuck. The one fix came at #6, when the signature example used === and you had to ask for timingSafeEqual.",
+    "habit": {
+     "name": "State the must-haves when asking for a draft",
+     "observed": "In #5 you asked for a Node example for verifying signatures. In #6 you had to come back and ask for timingSafeEqual instead of ===.",
+     "try_next": "When you ask for docs or code that customers will copy, list the requirements in the same prompt. For example: 'use crypto.timingSafeEqual, check the timestamp tolerance, raw body only'. Then ask Claude to compare the example against src/webhooks/sign.ts before you commit."
+    }
+   },
+   "report": null
+  }
+ }
+}

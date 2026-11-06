@@ -37,3 +37,18 @@ Set `CRITIC_DIR` to use a different state directory, for example a scratch direc
 - Do not put IDs, keys, or tsm entry names in committed files. They go in `~/.claude/critic/config.json`.
 - The status-line path must stay fast (target <100 ms) and must never throw. All API work runs in a detached child process.
 - Default model is `claude-opus-5-5` with server-side refusal fallbacks (`fallbacks: "default"`). Cadence checks run at `low` effort and reports at `medium`.
+
+## Demo
+
+`demo/` makes a video of Critic. It uses synthetic sessions only and does not touch `~/.claude`.
+
+1. `DEMO_DIR=<dir> demo/run.sh` makes 28 past sessions and 5 live sessions (one for each mood) in `<dir>`. Then it runs Critic on each live session. This step calls the Claude API.
+2. In `demo/video/`, with the same `DEMO_DIR` and `source ../env.sh`, run `bun scripts/data.ts`. This exports the real verdicts to `src/data.json`.
+3. Narration and music come from OpenRouter (`gpt-audio` and Lyria). Set `OPENROUTER_API_KEY` (from tsm, with `tsm run --env`), then run `bun scripts/narration.ts` and `bun scripts/music.ts`. The narration text is in `src/narration.ts`. The script keeps a clip only when its transcript matches the text.
+4. `bunx remotion render src/index.ts CriticDemo out/critic-demo.mp4 --concurrency=4 --timeout=120000` renders the 1920×1080 video. Use `bunx remotion studio src/index.ts` to preview it.
+
+`demo/critic.tape` (VHS) records the plain terminal version.
+
+The generated audio (`demo/video/public/`) and the rendered video are not committed. The README video is a GitHub attachment.
+
+`CRITIC_PROJECTS_DIR` sets the history that Critic compares against. The demo sets it to the synthetic history.
